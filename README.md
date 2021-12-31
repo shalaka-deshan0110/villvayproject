@@ -1,3 +1,14 @@
+## About This Project
+
+This is a sample project which demonstrates laravel 8 with jetstream and use of repository pattern.
+
+This repository pattern usage can be tested using postman, as csrf token verification has been disable for all the routes. This is a bad practise, but for testing purpose csrf validation has removed here.  
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
