@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Repositories\PostRepository;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
@@ -22,7 +23,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $result =['status' => 200];
+
+        try {
+            $result['data'] = $this->postRepository->getAll();
+        } catch (Exception $e) {
+            $result =[
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -61,10 +73,10 @@ class PostController extends Controller
 
         try {
             $result['data'] = $this->postRepository->save($data);
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             $result = [
                 'status' => 500,
-                'error' => $th->getMessage()
+                'error' => $e->getMessage()
             ];
         }
 
@@ -79,7 +91,18 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $result =['status' => 200];
+
+        try {
+            $result['data'] = $this->postRepository->getById($post->id);
+        } catch (Exception $e) {
+            $result =[
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -102,7 +125,32 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $data = $request->only([
+            'title',
+            'description'
+        ]);
+
+        $result = ['status' => 200];
+
+        $validator = Validator::make($data, [
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors->first());
+        }
+
+        try {
+            $result['data'] = $this->postRepository->update($data, $post->id);
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -113,6 +161,17 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $result =['status' => 200];
+
+        try {
+            $result['data'] = $this->postRepository->delete($post->id);
+        } catch (Exception $e) {
+            $result =[
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 }
